@@ -1,16 +1,19 @@
 [build]
-  # Explicitly telling it to install dependencies first, then build
-  command = "npm install && npm run build"
+  command = "npm run build"
   publish = "dist"
 
-# Handles the React Router SPA issue
+# This handles the React Router SPA issue we fixed earlier
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
+# Context: Production (Pushes to main branch)
 [context.production]
-  command = "npm install && npm run build"
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
 
+# Context: Deploy Previews (When you make a Pull Request)
 [context.deploy-preview]
-  command = "npm install && npm run build"
+  command = "npm run build"
+  # You can add different environment variables here if needed

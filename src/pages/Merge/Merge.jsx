@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Layers, X, Download, Loader2, Trash2 } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Layers, X, Download, Loader2, Trash2, GripVertical } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { mergePdfs } from "../../services/pdf.service";
 import { Dropzone } from "../../components/pdf/Dropzone";
@@ -9,6 +9,9 @@ export function Merge() {
   const [files, setFiles] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
+
+  const dragItem = useRef(null);
+  const dragOverItem = useRef(null);
 
   const handleFilesSelected = (selectedFiles) => {
     const validPdfs = selectedFiles.filter(
@@ -31,6 +34,27 @@ export function Merge() {
   const clearAllFiles = () => {
     setFiles([]);
     setError(null);
+  };
+
+  // Function to handle the array reordering when a file is dropped
+  const handleSort = () => {
+    if (dragItem.current === null || dragOverItem.current === null) return;
+    
+    // Duplicate the files array
+    let _files = [...files];
+    
+    // Remove and save the dragged item
+    const draggedItemContent = _files.splice(dragItem.current, 1)[0];
+    
+    // Insert the dragged item into its new position
+    _files.splice(dragOverItem.current, 0, draggedItemContent);
+    
+    // Reset the refs
+    dragItem.current = null;
+    dragOverItem.current = null;
+    
+    // Update state to trigger re-render in the new order
+    setFiles(_files);
   };
 
   const handleMerge = async () => {
@@ -104,16 +128,28 @@ export function Merge() {
             
             <ul className="space-y-2">
               {files.map((file, index) => (
-                <li key={`${file.name}-${index}`} className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg group hover:bg-slate-100 transition-colors">
-                  <div className="flex flex-col overflow-hidden mr-4">
-                    <span className="text-sm font-medium text-slate-700 truncate">{file.name}</span>
-                    {/* UPDATED: Showing the actual formatted file size for better UX */}
-                    <span className="text-xs text-slate-500 mt-0.5">{formatFileSize(file.size)}</span>
+                <li 
+                  key={`${file.name}-${index}`} 
+                  // HTML5 Drag & Drop attributes
+                  draggable={!isProcessing}
+                  onDragStart={() => (dragItem.current = index)}
+                  onDragEnter={() => (dragOverItem.current = index)}
+                  onDragEnd={handleSort}
+                  onDragOver={(e) => e.preventDefault()}
+                  className={`flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg group hover:border-primary/50 transition-all ${isProcessing ? 'opacity-50' : 'cursor-grab active:cursor-grabbing hover:shadow-md'}`}
+                >
+                  <div className="flex items-center overflow-hidden mr-4">
+                    {/*Grip icon to indicate draggability */}
+                    <GripVertical className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors mr-3 flex-shrink-0" />
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-sm font-medium text-slate-700 truncate">{file.name}</span>
+                      <span className="text-xs text-slate-500 mt-0.5">{formatFileSize(file.size)}</span>
+                    </div>
                   </div>
                   <button 
                     onClick={() => removeFile(index)}
                     disabled={isProcessing}
-                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-slate-50 rounded-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                     title="Remove file"
                   >
                     <X className="w-4 h-4" />
@@ -121,6 +157,9 @@ export function Merge() {
                 </li>
               ))}
             </ul>
+            <p className="text-xs text-slate-400 text-center mt-3 flex items-center justify-center">
+              Drag and drop files to rearrange their order before merging.
+            </p>
           </div>
         )}
 

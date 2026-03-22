@@ -1,7 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { FilePlus } from 'lucide-react';
 
-export function Dropzone({ onFilesSelected, multiple = false, disabled = false, text = "Click to upload" }) {
+export function Dropzone({ 
+  onFilesSelected, 
+  multiple = false, 
+  disabled = false, 
+  text = "Click to upload",
+  accept = ".pdf,application/pdf", 
+  hintText = "PDF Files Only"      
+}) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -54,14 +61,15 @@ export function Dropzone({ onFilesSelected, multiple = false, disabled = false, 
         <p className="mb-2 text-sm text-zinc-400 text-center px-4">
           <span className="font-semibold text-white">{text}</span> or drag and drop
         </p>
-        <p className="text-xs text-zinc-600 uppercase tracking-widest mt-2">PDF Files Only</p>
+        {/* Updated to use dynamic hint text */}
+        <p className="text-xs text-zinc-600 uppercase tracking-widest mt-2">{hintText}</p>
       </div>
       <input
         type="file"
         ref={fileInputRef}
         className="hidden"
         multiple={multiple}
-        accept=".pdf,application/pdf"
+        accept={accept} // Updated to use dynamic accept prop
         onChange={handleChange}
         disabled={disabled}
       />

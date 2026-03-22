@@ -35,6 +35,12 @@ export function Navbar() {
             >
               Watermark
             </Link>
+            <Link
+              to="/image-to-pdf"
+              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+            >
+              Image To PDF
+            </Link>
           </div>
         </div>
       </div>

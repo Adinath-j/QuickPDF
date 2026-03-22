@@ -104,3 +104,43 @@ export const addWatermark = async (file, watermarkText = "CONFIDENTIAL") => {
   const pdfBytes = await pdfDoc.save();
   return new Blob([pdfBytes], { type: "application/pdf" });
 };
+
+// convert various image formats (jpg, png) to PDF with each image on its own page, perfectly sized to fit the page without distortion
+export const imageToPdf = async (files) => {
+  if (!files || files.length === 0) {
+    throw new Error("No images provided for conversion.");
+  }
+
+  const pdfDoc = await PDFDocument.create();
+
+  for (const file of files) {
+    const arrayBuffer = await file.arrayBuffer();
+    let embeddedImage;
+
+    // Detect format and embed accordingly
+    if (file.type === "image/jpeg" || file.type === "image/jpg") {
+      embeddedImage = await pdfDoc.embedJpg(arrayBuffer);
+    } else if (file.type === "image/png") {
+      embeddedImage = await pdfDoc.embedPng(arrayBuffer);
+    } else {
+      throw new Error(`Unsupported file type: ${file.type}. Please use JPG or PNG.`);
+    }
+
+    // Extract precise dimensions
+    const { width, height } = embeddedImage;
+
+    // Create a page matching the exact image dimensions
+    const page = pdfDoc.addPage([width, height]);
+
+    // Draw the image filling the entire page
+    page.drawImage(embeddedImage, {
+      x: 0,
+      y: 0,
+      width,
+      height,
+    });
+  }
+
+  const pdfBytes = await pdfDoc.save();
+  return new Blob([pdfBytes], { type: "application/pdf" });
+};

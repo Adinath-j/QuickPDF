@@ -6,6 +6,7 @@ import {
   Stamp,
   Image as ImageIcon,
   Minimize2,
+  RefreshCw,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -178,7 +179,7 @@ export function ToolsGrid() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative z-10 w-14 h-14 border border-white/10 bg-zinc-900 text-white rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-white group-hover:text-black transition-all duration-500">
-            <Minimize2 className="w-6 h-6" />
+            <RefreshCw className="w-10 h-10" />
           </div>
           <h2 className="relative z-10 text-2xl font-semibold text-white mb-3 tracking-tight">
             Rotate PDF

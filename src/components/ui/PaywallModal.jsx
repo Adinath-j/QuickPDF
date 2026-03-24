@@ -7,7 +7,7 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { parseUnits } from "viem";
 import { useCheckout, CHECKOUT_STAGE } from "../../hooks/useCheckout";
 import { useCryptoPrices } from "../../hooks/useCryptoPrices";
-import { getUsdcAddress, getUsdtAddress, getStableDecimals, SEPOLIA_ETH_PRICE } from "../../config/contracts";
+import { getUsdcAddress, getUsdtAddress, getStableDecimals } from "../../config/contracts";
 
 const TARGET_USD = 5;
 
@@ -18,15 +18,14 @@ const STAGE_COPY = {
 };
 
 
-const CHAIN = { ETH: 1, MATIC: 137, BNB: 56, AVAX: 43114, ARB: 42161, SEPOLIA: 11155111 };
+const CHAIN = { ETH: 1, MATIC: 137, BNB: 56, AVAX: 43114, ARB: 42161 };
 
 const EXPLORER = {
-  [CHAIN.ETH]:    "https://etherscan.io/tx/",
-  [CHAIN.MATIC]:  "https://polygonscan.com/tx/",
-  [CHAIN.BNB]:    "https://bscscan.com/tx/",
-  [CHAIN.AVAX]:   "https://snowtrace.io/tx/",
-  [CHAIN.ARB]:    "https://arbiscan.io/tx/",
-  [CHAIN.SEPOLIA]:"https://sepolia.etherscan.io/tx/",
+  [CHAIN.ETH]:   "https://etherscan.io/tx/",
+  [CHAIN.MATIC]: "https://polygonscan.com/tx/",
+  [CHAIN.BNB]:   "https://bscscan.com/tx/",
+  [CHAIN.AVAX]:  "https://snowtrace.io/tx/",
+  [CHAIN.ARB]:   "https://arbiscan.io/tx/",
 };
 
 
@@ -107,18 +106,6 @@ function buildTokenOptions(prices, chainId) {
       type:    "erc20",
       disabled: !usdtOk,
       disabledReason: !usdtOk ? "Switch to Ethereum, Polygon, BSC, Arbitrum, or Avalanche" : undefined,
-    },
-    {
-      key:     "SEPOLIA",
-      label:   "Sepolia Testnet",
-      symbol:  "SepoliaETH",
-      network: "Sepolia Testnet",
-      chainId: CHAIN.SEPOLIA,
-      color:   "#A259FF",
-      amount:  "0.01",
-      wei:     SEPOLIA_ETH_PRICE,
-      type:    "native",
-      badge:   "Testnet",
     },
   ];
 }

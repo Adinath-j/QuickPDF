@@ -3,13 +3,13 @@ import "@rainbow-me/rainbowkit/styles.css";
 import React from "react";
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
-import { mainnet, polygon, bsc, avalanche, arbitrum, sepolia } from "wagmi/chains";
+import { mainnet, polygon, bsc, avalanche, arbitrum } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
   appName:   "QuickPDF",
   projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
-  chains:    [mainnet, polygon, bsc, avalanche, arbitrum, sepolia],
+  chains:    [mainnet, polygon, bsc, avalanche, arbitrum],
   ssr:       false,
 });
 

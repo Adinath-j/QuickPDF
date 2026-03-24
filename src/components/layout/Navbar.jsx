@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FileText, Menu, X, LogOut, Crown, Copy, Check } from "lucide-react";
+import { FileText, Menu, X, LogOut, Crown, Copy, Check, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -167,8 +167,19 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right: wallet + mobile toggle */}
+          {/* Right: GitHub star + wallet + mobile toggle */}
           <div className="flex items-center gap-3 shrink-0">
+
+            {/* GitHub Star button */}
+            <a
+              href="https://github.com/JhaSourav07/QuickPDF"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/25 transition-all text-sm font-medium text-zinc-300 hover:text-white group"
+            >
+              <Star className="w-3.5 h-3.5 text-amber-400 group-hover:fill-amber-400 transition-all" />
+              Star us
+            </a>
 
             {/* Wallet widget */}
             {isConnected && address ? (
@@ -218,6 +229,17 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
+
+              {/* Mobile: GitHub Star */}
+              <a
+                href="https://github.com/JhaSourav07/QuickPDF"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-3 text-base font-medium text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+              >
+                <Star className="w-4 h-4 text-amber-400" />
+                Star us on GitHub
+              </a>
 
               {/* Mobile wallet section */}
               <div className="pt-3 mt-3 border-t border-white/10">

@@ -1,8 +1,6 @@
 // The wallet address that receives all payments — replace this before going live.
 export const TREASURY_ADDRESS = "0xdCdCCB2F5eb9Ae47c6C4ADA7E2a549a22e27c0e8";
 
-// Hardcoded Sepolia testnet price — 0.01 SepoliaETH for lifetime access (for testing)
-export const SEPOLIA_ETH_PRICE = 10000000000000000n; // 0.01 ETH in wei
 
 // Minimal ERC-20 ABI — only the transfer() function we actually call
 export const ERC20_TRANSFER_ABI = [
@@ -25,7 +23,6 @@ export const USDC_ADDRESSES = {
   42161:    "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // Arbitrum
   43114:    "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6", // Avalanche
   56:       "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", // BSC (18 decimals!)
-  11155111: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", // Sepolia testnet
 };
 
 // USDT — official Tether deployments per chain

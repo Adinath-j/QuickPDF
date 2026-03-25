@@ -51,7 +51,6 @@ export function Rotate() {
       a.click();
       URL.revokeObjectURL(url);
 
-      // ✅ Track: updates Firestore (connected) or localStorage (anonymous)
       await incrementUsage();
 
       setRotation(0);

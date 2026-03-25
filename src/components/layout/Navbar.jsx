@@ -6,18 +6,10 @@ import { useAccount, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useSubscription } from "../../hooks/useSubscription";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 function truncate(address) {
   if (!address) return "";
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
-
-// ---------------------------------------------------------------------------
-// WalletMenu — shown when wallet IS connected
-// ---------------------------------------------------------------------------
 
 function WalletMenu({ address, isPremium }) {
   const { disconnect } = useDisconnect();
@@ -25,7 +17,6 @@ function WalletMenu({ address, isPremium }) {
   const [copied, setCopied] = useState(false);
   const ref = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
     function onOutside(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
@@ -42,12 +33,10 @@ function WalletMenu({ address, isPremium }) {
 
   return (
     <div className="relative" ref={ref}>
-      {/* Pill trigger */}
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-2 h-9 pl-3 pr-3.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-sm font-medium text-white"
       >
-        {/* Status dot */}
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
@@ -55,13 +44,11 @@ function WalletMenu({ address, isPremium }) {
 
         {truncate(address)}
 
-        {/* Premium crown badge */}
         {isPremium && (
           <Crown className="w-3.5 h-3.5 text-amber-400 ml-0.5" />
         )}
       </button>
 
-      {/* Dropdown */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -71,7 +58,6 @@ function WalletMenu({ address, isPremium }) {
             transition={{ duration: 0.15 }}
             className="absolute right-0 mt-2 w-56 bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
           >
-            {/* Address row */}
             <div className="px-4 pt-4 pb-3 border-b border-white/[0.06]">
               <p className="text-[11px] text-zinc-600 uppercase tracking-widest font-semibold mb-1">
                 Connected wallet
@@ -93,7 +79,6 @@ function WalletMenu({ address, isPremium }) {
               </div>
             </div>
 
-            {/* Status row */}
             <div className="px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
               <span className="text-xs text-zinc-500">Plan</span>
               {isPremium ? (
@@ -105,7 +90,6 @@ function WalletMenu({ address, isPremium }) {
               )}
             </div>
 
-            {/* Disconnect */}
             <button
               onClick={() => { disconnect(); setOpen(false); }}
               className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-zinc-400 hover:text-red-400 hover:bg-red-500/5 transition-all"
@@ -120,25 +104,21 @@ function WalletMenu({ address, isPremium }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Navbar
-// ---------------------------------------------------------------------------
-
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { address, isConnected } = useAccount();
   const { isPremium } = useSubscription();
 
   const navLinks = [
-    { name: "Merge",       path: "/merge"        },
-    { name: "Split",       path: "/split"        },
-    { name: "Watermark",   path: "/watermark"    },
-    { name: "Image To PDF",path: "/image-to-pdf" },
-    { name: "Compress",    path: "/compress"     },
-    { name: "Rotate",      path: "/rotate"       },
-    { name: "Organize",    path: "/organize"     },
-    { name: "PDF To Image",path: "/pdf-to-image" },
-    { name: "Grayscale",   path: "/grayscale"    },
+    { name: "Merge",        path: "/merge"        },
+    { name: "Split",        path: "/split"        },
+    { name: "Watermark",    path: "/watermark"    },
+    { name: "Image To PDF", path: "/image-to-pdf" },
+    { name: "Compress",     path: "/compress"     },
+    { name: "Rotate",       path: "/rotate"       },
+    { name: "Organize",     path: "/organize"     },
+    { name: "PDF To Image", path: "/pdf-to-image" },
+    { name: "Grayscale",    path: "/grayscale"    },
   ];
 
   return (
@@ -146,7 +126,6 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center gap-4">
 
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group z-50 shrink-0">
             <div className="bg-white text-black p-1.5 rounded-md group-hover:scale-105 transition-transform">
               <FileText className="h-5 w-5" />
@@ -154,7 +133,6 @@ export function Navbar() {
             <span className="font-bold text-xl tracking-tight text-white">QuickPDF</span>
           </Link>
 
-          {/* Desktop nav links */}
           <div className="hidden lg:flex gap-6 flex-1 justify-center">
             {navLinks.map((link) => (
               <Link
@@ -167,10 +145,8 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right: GitHub star + wallet + mobile toggle */}
           <div className="flex items-center gap-3 shrink-0">
 
-            {/* GitHub Star button */}
             <a
               href="https://github.com/JhaSourav07/QuickPDF"
               target="_blank"
@@ -181,11 +157,9 @@ export function Navbar() {
               Star us
             </a>
 
-            {/* Wallet widget */}
             {isConnected && address ? (
               <WalletMenu address={address} isPremium={isPremium} />
             ) : (
-              /* RainbowKit ConnectButton — compact variant */
               <div className="hidden sm:block">
                 <ConnectButton
                   accountStatus="hidden"
@@ -196,7 +170,6 @@ export function Navbar() {
               </div>
             )}
 
-            {/* Mobile hamburger */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors z-50"
@@ -208,7 +181,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -230,7 +202,6 @@ export function Navbar() {
                 </Link>
               ))}
 
-              {/* Mobile: GitHub Star */}
               <a
                 href="https://github.com/JhaSourav07/QuickPDF"
                 target="_blank"
@@ -241,7 +212,6 @@ export function Navbar() {
                 Star us on GitHub
               </a>
 
-              {/* Mobile wallet section */}
               <div className="pt-3 mt-3 border-t border-white/10">
                 {isConnected && address ? (
                   <WalletMenu address={address} isPremium={isPremium} />

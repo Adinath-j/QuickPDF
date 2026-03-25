@@ -123,10 +123,6 @@ function buildTokenOptions(prices, chainId) {
   ];
 }
 
-// ---------------------------------------------------------------------------
-// Token Icon (text-based, no external images)
-// ---------------------------------------------------------------------------
-
 function TokenIcon({ symbol, color, size = 36 }) {
   return (
     <div
@@ -137,10 +133,6 @@ function TokenIcon({ symbol, color, size = 36 }) {
     </div>
   );
 }
-
-// ---------------------------------------------------------------------------
-// TxLink
-// ---------------------------------------------------------------------------
 
 function TxLink({ txHash, chainId }) {
   if (!txHash) return null;
@@ -154,10 +146,6 @@ function TxLink({ txHash, chainId }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Main modal
-// ---------------------------------------------------------------------------
-
 export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isPremium }) {
   const { isConnected: isWalletConnected } = useAccount();
   const chainId = useChainId();
@@ -170,12 +158,10 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
   const isProcessing = [CHECKOUT_STAGE.SIGNING, CHECKOUT_STAGE.CONFIRMING, CHECKOUT_STAGE.WRITING_DB].includes(stage);
   const isSuccess = stage === CHECKOUT_STAGE.SUCCESS || isPremium;
 
-  // Auto-close after success
   useEffect(() => {
     if (isSuccess && isOpen) { const t = setTimeout(onClose, 2200); return () => clearTimeout(t); }
   }, [isSuccess, isOpen, onClose]);
 
-  // Reset on close
   useEffect(() => { if (!isOpen) { reset(); setSelectedToken(null); } }, [isOpen]); // eslint-disable-line
 
   const { switchChainAsync } = useSwitchChain();
@@ -216,7 +202,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
             <div className="p-6 sm:p-8">
-              {/* Close */}
               {!isProcessing && (
                 <button onClick={handleClose} aria-label="Close"
                   className="absolute top-5 right-5 text-zinc-600 hover:text-white transition-colors p-1.5 rounded-xl hover:bg-white/5"
@@ -227,7 +212,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
 
               <AnimatePresence mode="wait">
 
-                {/* ━━ SUCCESS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
                 {isSuccess ? (
                   <motion.div key="success" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
                     className="flex flex-col items-center py-6 text-center"
@@ -242,7 +226,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                   </motion.div>
 
                 ) : isProcessing ? (
-                  /* ━━ PROCESSING ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
                   <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center py-6 text-center">
                     <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5">
                       <Loader2 className="w-8 h-8 text-white animate-spin" />
@@ -255,10 +238,8 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                   </motion.div>
 
                 ) : (
-                  /* ━━ IDLE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
                   <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
 
-                    {/* Header */}
                     <div className="flex items-start gap-4 mb-6">
                       <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
                         {reason === "size" ? <Lock className="w-5 h-5 text-white" /> : <Zap className="w-5 h-5 text-white" />}
@@ -274,7 +255,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                       </div>
                     </div>
 
-                    {/* Error banner */}
                     {stage === CHECKOUT_STAGE.ERROR && error && (
                       <div className="flex items-start gap-2.5 px-4 py-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs">
                         <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
@@ -288,7 +268,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                       </div>
                     )}
 
-                    {/* ── NOT CONNECTED ── */}
                     {!isWalletConnected ? (
                       <div className="flex flex-col items-center gap-3 py-4">
                         <p className="text-[11px] text-zinc-600 uppercase tracking-widest font-semibold">Connect your wallet to continue</p>
@@ -296,7 +275,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                       </div>
 
                     ) : (
-                      /* ── TOKEN GRID ── */
                       <div className="space-y-4">
                         <p className="text-[11px] text-zinc-500 uppercase tracking-widest font-semibold mb-1">Choose payment method</p>
 
@@ -335,7 +313,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                           })}
                         </div>
 
-                        {/* Selected token detail + optional chain-switch warning */}
                         <AnimatePresence>
                           {selectedToken && (
                             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
@@ -359,7 +336,6 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
                           )}
                         </AnimatePresence>
 
-                        {/* Pay CTA */}
                         <button onClick={handlePay} disabled={!selectedToken || !selectedToken.wei || isSwitchingChain}
                           className="w-full flex items-center justify-center gap-3 h-13 px-5 py-3.5 bg-white text-black font-bold text-sm tracking-wide rounded-xl hover:bg-zinc-100 transition-all disabled:opacity-40 disabled:pointer-events-none"
                         >

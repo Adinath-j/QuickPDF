@@ -140,6 +140,7 @@ QuickPDF uses [`pdf-lib`](https://pdf-lib.js.org/) — a pure JavaScript library
 - [ ] Add Page Numbers — Auto-stamp sequential numbers on footers
 - [ ] Extract Text (OCR) — Pull readable text directly to clipboard
 - [ ] Protect/Unlock PDF — Add or remove passwords locally
+- [ ] Edit Pdf - Edit pdf locally on your browser
 
 ---
 

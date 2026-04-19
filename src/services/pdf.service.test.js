@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
-import { mergePdfs, splitPdf, getPdfPageCount } from './pdf.service.js';
+import { mergePdfs, splitPdf, getPdfPageCount, addWatermark, addPageNumbers } from './pdf.service.js';
 
 vi.mock('pdfjs-dist', () => ({
   getDocument: vi.fn(),
@@ -117,5 +117,33 @@ describe('getPdfPageCount', () => {
     
     // 3. Assert: Verify the page count is strictly equal to 7
     expect(pageCount).toBe(7);
+  });
+});
+
+describe('addWatermark', () => {
+  it('should add a watermark and return a valid PDF Blob', async () => {
+    // Arrange: Create a mock 1-page PDF
+    const file = await createMockPdfFile('watermark-test.pdf', 1);
+    
+    // Act: Add a custom watermark
+    const watermarkedBlob = await addWatermark(file, 'TEST WATERMARK');
+    
+    // Assert: Verify it executes successfully and returns a Blob
+    expect(watermarkedBlob).toBeInstanceOf(Blob);
+    expect(watermarkedBlob.type).toBe('application/pdf');
+  });
+});
+
+describe('addPageNumbers', () => {
+  it('should add page numbers and return a valid PDF Blob', async () => {
+    // Arrange: Create a mock 2-page PDF
+    const file = await createMockPdfFile('page-numbers-test.pdf', 2);
+    
+    // Act: Add page numbers with center position
+    const numberedBlob = await addPageNumbers(file, { position: 'center' });
+    
+    // Assert: Verify it executes successfully and returns a Blob
+    expect(numberedBlob).toBeInstanceOf(Blob);
+    expect(numberedBlob.type).toBe('application/pdf');
   });
 });

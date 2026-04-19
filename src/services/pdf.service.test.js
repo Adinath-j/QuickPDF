@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
-import { mergePdfs, splitPdf } from './pdf.service.js';
+import { mergePdfs, splitPdf, getPdfPageCount } from './pdf.service.js';
 
 vi.mock('pdfjs-dist', () => ({
   getDocument: vi.fn(),
@@ -104,5 +104,18 @@ describe('splitPdf', () => {
     
     // Test: start page is greater than end page
     await expect(callSplitPdf(4, 2)).rejects.toThrow('Invalid range');
+  });
+});
+
+describe('getPdfPageCount', () => {
+  it('should return exactly 7 for a 7-page PDF', async () => {
+    // 1. Arrange: Create a mock 7-page PDF
+    const file = await createMockPdfFile('7-page.pdf', 7);
+    
+    // 2. Act: Call getPdfPageCount
+    const pageCount = await getPdfPageCount(file);
+    
+    // 3. Assert: Verify the page count is strictly equal to 7
+    expect(pageCount).toBe(7);
   });
 });

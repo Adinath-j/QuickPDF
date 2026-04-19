@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { useFileStore } from "../../hooks/useFileStore";
 import { LayoutGrid, Trash2, Download, Loader2, RotateCcw, FileWarning, GripVertical } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Button } from "../../components/ui/Button";
 import { UpgradeButton } from "../../components/ui/UpgradeButton";
 import { Dropzone } from "../../components/pdf/Dropzone";
@@ -68,7 +68,7 @@ export function Organize() {
     try {
       const pages = await getPdfThumbnails(selectedFile);
       setThumbnails(pages);
-    } catch (err) {
+    } catch {
       setError("Could not read the PDF. It may be encrypted, corrupted, or empty.");
       setFile(null);
     } finally {
@@ -98,7 +98,7 @@ export function Organize() {
       const a = document.createElement("a"); a.href = url; a.download = `QuickPDF_Organized_${file.name}`; a.click();
       URL.revokeObjectURL(url);
       await incrementUsage();
-    } catch (err) {
+    } catch {
       setError("Failed to build the PDF. Please try again.");
     } finally {
       setIsProcessing(false);

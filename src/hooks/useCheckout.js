@@ -29,7 +29,7 @@ export function useCheckout() {
 
   const liveTxHash = nativeTxHash ?? erc20TxHash;
 
-  const { isLoading: isConfirming, isSuccess: isTxConfirmed, error: receiptError } = useWaitForTransactionReceipt({
+  const {  isSuccess: isTxConfirmed, error: receiptError } = useWaitForTransactionReceipt({
     hash:  liveTxHash,
     query: { enabled: !!liveTxHash },
   });

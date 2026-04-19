@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useFileStore } from "../../hooks/useFileStore";
 import { RotateCw, RotateCcw, Download, Loader2, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Button }         from "../../components/ui/Button";
 import { UpgradeButton }  from "../../components/ui/UpgradeButton";
 import { rotatePdfPerPage } from "../../services/pdf.service";

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { X, Lock, Zap, Loader2, CheckCircle2, AlertCircle, ExternalLink, ShieldCheck, ChevronRight } from "lucide-react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
@@ -179,7 +179,7 @@ export function PaywallModal({ isOpen, onClose, reason = "size", limitLabel, isP
         setIsSwitchingChain(false);
       }
       executePayment(selectedToken.key, selectedToken.wei);
-    } catch (err) {
+    } catch {
       // User rejected chain switch — don't proceed
       setIsSwitchingChain(false);
     }

@@ -4,7 +4,7 @@ import {
   Layers, X, Download, Loader2, Trash2, GripVertical,
   Plus, Eye, EyeOff, CheckCircle2, FileText,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Button }        from "../../components/ui/Button";
 import { UpgradeButton } from "../../components/ui/UpgradeButton";
 import { mergePdfs }     from "../../services/pdf.service";

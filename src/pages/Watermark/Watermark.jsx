@@ -36,8 +36,8 @@ export function Watermark() {
     file &&
     file.size > mbToBytes(FREE_LIMITS.watermark.maxFileSizeMb);
 
-  // const isLocked = hasReachedGlobalLimit || fileTooLarge;
-  const isLocked = false;
+  const isLocked = hasReachedGlobalLimit || fileTooLarge;
+  // const isLocked = false;
   const lockReason = hasReachedGlobalLimit ? "global" : "size";
   const lockLabel = fileTooLarge
     ? `${FREE_LIMITS.watermark.maxFileSizeMb} MB`

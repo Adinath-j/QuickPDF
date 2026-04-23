@@ -10,7 +10,7 @@ import { useSubscription } from "../../hooks/useSubscription";
 import { FREE_LIMITS, mbToBytes } from "../../config/limits";
 
 export function Watermark() {
-  const [file, setFile, clearFile_store] = useFileStore("Watermark_file", null);
+  const [file, setFile] = useFileStore("Watermark_file", null);
   const [watermarkText, setWatermarkText] = useState("CONFIDENTIAL");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
@@ -24,22 +24,30 @@ export function Watermark() {
     isWalletConnected,
   } = useSubscription();
 
-  // Clear file on component unmount to prevent persistence across sessions
   useEffect(() => {
     return () => {
-      clearFile_store();
-      if (originalPreviewUrl) URL.revokeObjectURL(originalPreviewUrl);
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (originalPreviewUrl) {
+        URL.revokeObjectURL(originalPreviewUrl);
+      }
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
     };
-  }, []);
+  }, [originalPreviewUrl, previewUrl]);
 
   // Recreate original preview URL when file is loaded from storage but preview is missing
   useEffect(() => {
-    if (file && !originalPreviewUrl && !previewUrl) {
-      const originalUrl = URL.createObjectURL(file);
-      setOriginalPreviewUrl(originalUrl);
-    }
-  }, [file, originalPreviewUrl, previewUrl]);
+    if (!file || previewUrl || originalPreviewUrl) return;
+
+    const originalUrl = file.url || URL.createObjectURL(file);
+    queueMicrotask(() => setOriginalPreviewUrl(originalUrl));
+
+    return () => {
+      if (!file.url) {
+        URL.revokeObjectURL(originalUrl);
+      }
+    };
+  }, [file, previewUrl, originalPreviewUrl]);
 
   const fileTooLarge =
     !isPremium &&
@@ -63,10 +71,12 @@ export function Watermark() {
 
     setError(null);
     setFile(selectedFile);
-    
+
     // Create preview URL for the original PDF before processing
-    const originalUrl = URL.createObjectURL(selectedFile);
-    setOriginalPreviewUrl(originalUrl);
+    if (originalPreviewUrl) {
+      URL.revokeObjectURL(originalPreviewUrl);
+    }
+    setOriginalPreviewUrl(URL.createObjectURL(selectedFile));
     setPreviewUrl(null);
   };
 
@@ -82,7 +92,6 @@ export function Watermark() {
       setPreviewUrl(null);
     }
   };
-
   const handleProcess = async () => {
     if (!file || !watermarkText.trim()) return;
 

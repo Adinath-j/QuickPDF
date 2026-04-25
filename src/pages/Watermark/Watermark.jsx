@@ -8,6 +8,8 @@ import { Dropzone } from "../../components/pdf/Dropzone";
 import { formatFileSize } from "../../utils/formatters";
 import { useSubscription } from "../../hooks/useSubscription";
 import { FREE_LIMITS, mbToBytes } from "../../config/limits";
+import { getPdfPageCount } from "../../services/pdf.service";
+
 
 export function Watermark() {
   const [file, setFile] = useFileStore("Watermark_file", null);
@@ -16,6 +18,7 @@ export function Watermark() {
   const [error, setError] = useState(null);
   const [originalPreviewUrl, setOriginalPreviewUrl] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [pageCount, setPageCount] = useState(0);
 
   const {
     isPremium,
@@ -60,38 +63,24 @@ export function Watermark() {
     ? `${FREE_LIMITS.watermark.maxFileSizeMb} MB`
     : undefined;
 
-  const handleFileSelected = (selectedFiles) => {
-    const selectedFile = selectedFiles[0];
-    if (!selectedFile) return;
+  const handleFileSelected = async (selectedFiles) => {
+  const selectedFile = selectedFiles[0];
+  if (!selectedFile) return;
 
-    if (selectedFile.type !== "application/pdf") {
-      setError("Please upload a valid PDF file.");
-      return;
-    }
+  if (selectedFile.type !== "application/pdf") {
+    setError("Please upload a valid PDF file.");
+    return;
+  }
 
-    setError(null);
-    setFile(selectedFile);
+  setError(null);
+  setFile(selectedFile);
 
-    // Create preview URL for the original PDF before processing
-    if (originalPreviewUrl) {
-      URL.revokeObjectURL(originalPreviewUrl);
-    }
-    setOriginalPreviewUrl(URL.createObjectURL(selectedFile));
-    setPreviewUrl(null);
-  };
+  const count = await getPdfPageCount(selectedFile);
+  console.log("Page count:", count);  
+  setPageCount(count);
+  setPreviewUrl(null);
+};
 
-  const clearFile = () => {
-    setFile(null);
-    setError(null);
-    if (originalPreviewUrl) {
-      URL.revokeObjectURL(originalPreviewUrl);
-      setOriginalPreviewUrl(null);
-    }
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
-  };
   const handleProcess = async () => {
     if (!file || !watermarkText.trim()) return;
 
@@ -111,6 +100,12 @@ export function Watermark() {
       setIsProcessing(false);
     }
   };
+  function clearFile() {
+  setFile(null);
+  setError(null);
+  setPreviewUrl(null);
+  setPageCount(0);
+}
 
   return (
     <div className={`mx-auto py-8 sm:py-12 px-4 sm:px-6 transition-all duration-500 ease-in-out ${previewUrl || (file && originalPreviewUrl) ? 'w-full max-w-[1600px]' : 'max-w-3xl'}`}>
@@ -158,7 +153,7 @@ export function Watermark() {
                 </span>
 
                 <span className="text-sm text-zinc-500 mt-0.5">
-                  {formatFileSize(file.size)}
+                  {formatFileSize(file.size)} • {pageCount} pages
                   {fileTooLarge && (
                     <span className="text-amber-400 ml-2">
                       (exceeds free limit)
